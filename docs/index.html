@@ -15,10 +15,30 @@
   </head>
   <body>
     <div id="wrapper" class="container mb-3">
-      <div id="app">
+      <div id="app" class="header">
+        <h2>Search Params:</h2>
+        <div v-for="obj in search" class="alert alert-primary" role="alert">
+          <strong>{{obj.param}}</strong>: {{obj.value}}
+        </div>
       </div>
       <hr>
       <div id="form">
+        <div v-if="manyApplied" class="clear-all">
+          <a v-on:click.prevent="clearAll" href="none">Clear All</a>
+        </div>
+        <div v-for="(item, indx) in models" class="form-element">
+          <a v-if="wasApplied(indx)" class="clear" v-on:click.prevent="clear(indx)" href="none">Clear</a>
+          <span class="title">{{ item.title }}</span>
+          <div class="input-group">
+            <input v-if="item.type == 'text'" class="form-control" type="text" v-model="models[indx].value">
+            <select v-else class="form-control" v-model="models[indx].value">
+              <option v-for="opt in optionsFor(item)" v-bind:value="opt.value">{{ opt.label }}</option>
+            </select>
+            <div v-if="hasValue(indx)" class="input-group-append">
+              <button class="btn btn-primary" type="button" v-bind:class="classFor(indx)" v-on:click="apply(indx)"><i class="fa fa-search"></i></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script src="main.js"></script>
