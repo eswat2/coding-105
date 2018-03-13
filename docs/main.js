@@ -57,10 +57,15 @@ const form = new Vue({
   methods: {
     apply: function(indx) {
       const value = this.models[indx].value
+      const param = this.models[indx].param
       if (this.models[indx].applied != value) {
-        this.models[indx].applied = value
-        const param = this.models[indx].param
-        eventBus.$emit('new:filter', { param, value })
+        if (value !== '') {
+          this.models[indx].applied = value
+          eventBus.$emit('new:filter', { param, value })
+        } else {
+          // NOTE:  special case which handles clearing blank inputs...
+          this.clear(indx)
+        }
       }
     },
     classFor: function(indx) {
